@@ -1,0 +1,1170 @@
+<html>
+<head>
+<style>
+.border{
+   border-style: solid;
+   border-width: 1px;
+}
+.red{
+  color:red;
+  background-color:red;
+  border-color:black;
+}
+.orange{
+  color:orange;
+  background-color:orange;
+  border-color:black;
+}
+.yellow{
+  color:yellow;
+  background-color:yellow;
+  border-color:black;
+}
+.green{
+  color:green;
+  background-color:green;
+  border-color:black;
+}
+.blue{
+  color:blue;
+  background-color:blue;
+  border-color:black;
+}
+.purple{
+  color:purple;
+  background-color:purple;
+  border-color:black;
+}
+.white{
+  color:white;
+  background-color:white;
+  border-color:black;
+}
+.black{
+  color:black;
+  background-color:black;
+  border-color:white;
+}
+.chest{
+  color:brown;
+  background-color:brown;
+  border-color:white;
+}
+.boss{
+	background: linear-gradient(90deg, black 50%, purple 50%);
+}
+.square {
+  height: 50px;
+  width: 50px;
+  -moz-box-shadow:    inset 0 0 10px #000000;
+  -webkit-box-shadow: inset 0 0 10px #000000;
+  box-shadow:         inset 0 0 10px #000000;
+}
+.questmaster {
+	background: linear-gradient(90deg, blue 50%, white 50%);
+}
+.fire {
+	background: linear-gradient(90deg, red 50%, yellow 50%);
+}
+.wood {
+	background: linear-gradient(90deg, green 50%, brown 50%);
+}
+.water {
+	background: linear-gradient(90deg, green 50%, blue 50%);
+}
+.circle {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  -moz-box-shadow:    inset 0 0 10px #000000;
+  -webkit-box-shadow: inset 0 0 10px #000000;
+  box-shadow:         inset 0 0 10px #000000;
+}
+button{
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+.hidden{
+	display: none;
+}
+.visible{
+	display: block;
+}
+.movable{
+	position: absolute; 
+	left:0;  
+	top:0; 
+	bottom: auto;
+}
+.grid{
+	height: 100%;
+	width: 100%;
+	background-image: repeating-linear-gradient(0deg, transparent, transparent 52px, #EEE 52px, #EEE 53px), repeating-linear-gradient(-90deg, transparent, transparent 52px, #EEE 52px, #EEE 53px);
+	background-size: 53px 53px;
+}
+.inline{
+	display:block;
+	float:left;
+}
+</style>
+</head>
+<body onload="gameLoop();" onkeydown="" onkeyup="moveSelection(event)">
+	<div id="sample" class="square green border movable" hidden="true"></div>
+	<div id="modeselect">
+	<button type="button" id="single" class="visible" onclick="chooseMode(this)">SinglePlayer</button>
+	<button type="button" id="multi" class="visible" onclick="chooseMode(this)">MultiPlayer</button>
+	<button type="button" id="load" class="hidden" onclick="chooseMode(this)">Load Saved Game</button>
+	</div>
+	<div id="singlegame" class="grid" hidden="true">
+		<div id="character" class="movable">
+			
+		</div>
+	</div>
+	<div id="inventory" class="hidden">
+		<h2>You have <span id="atkitems"></span> atk items</h2>
+		<h2>You have <span id="defitems"></span> def items</h2>
+		<h2>You have <span id="hpitems"></span> hp items</h2>
+		<h2>You have <span id="wood"></span> wood</h2>
+		<h2>You have <span id="fish"></span> fish</h2>
+		<h2>You have <span id="food"></span> food</h2>
+	</div>
+	<p id="prompt" class="hidden">HELLO KAYLEY</p>
+	<h2 id="lootprompt" class="hidden">You found a <span id="lootpromptQuality"></span> <span id="lootpromptStat"></span> item</h2>
+	<div id="choices" class="hidden">
+	<div style="display:block;">
+		<div key="rs" color="Red" shape="square" class="square red border inline" onclick="show(this)"></div>
+		<div key="rc" color="Red" shape="circle" class="circle red border inline" onclick="show(this)"></div>
+		<div key="os" color="Orange" shape="square" class="square orange border inline" onclick="show(this)"></div>
+		<div key="oc" color="Orange" shape="circle" class="circle orange border inline" onclick="show(this)"></div>
+		<div key="ys" color="Yellow" shape="square" class="square yellow border inline" onclick="show(this)"></div>
+		<div key="yc" color="Yellow" shape="circle" class="circle yellow border inline" onclick="show(this)"></div>
+		<div key="gs" color="Green" shape="square" class="square green border inline" onclick="show(this)"></div>
+		<div key="gc" color="Green" shape="circle" class="circle green border inline" onclick="show(this)"></div>
+		<div key="bls" color="Blue" shape="square" class="square blue border inline" onclick="show(this)"></div>
+		<div key="blc" color="Blue" shape="circle" class="circle blue border inline" onclick="show(this)"></div>
+		<div key="ps" color="Purple" shape="square" class="square purple border inline" onclick="show(this)"></div>
+		<div key="pc" color="Purple" shape="circle" class="circle purple border inline" onclick="show(this)"></div>
+		<div key="ws" color="White" shape="square" class="square white border inline" onclick="show(this)"></div>
+		<div key="wc" color="White" shape="circle" class="circle white border inline" onclick="show(this)"></div>
+		<div key="bks" color="Black" shape="square" class="square black border inline" onclick="show(this)"></div>
+		<div key="bkc" color="Black" shape="circle" class="circle black border inline" onclick="show(this)"></div>
+	</div>
+	<div id="selectedColor"></div>
+	<button type="button" id="confirm" class="hidden" onclick="select()">Confirm</button>
+	</div>
+	<div id="game" hidden="true">
+		<h1><span id="p1Name"></span> Score <span id="p1Score"></span></h1>
+		<h1><span id="p2Name"></span> Score <span id="p2Score"></span></h2>
+		<button type="button" id="attack" onclick="roll(this)">Attack</button>
+		<button type="button" id="heal" onclick="roll(this)">Heal</button>
+		<h1 id="results">Round <span id="round"></span></h1>
+		<h1><span id="turn"></span>'s Turn</h1>
+		<h2 id="p1resultwrapper" hidden="true"><span id="player1a"></span> rolled a: <span id="p1result"></span></h2>
+		<h2 id="p1damagewrapper" hidden="true"><span id="player1b"></span> dealt <span id="p1damage"></span> <span id="p1damagetype"></span></h2>
+		<h2 id="p2resultwrapper" hidden="true"><span id="player2a"></span> rolled a: <span id="p2result"></span></h2>
+		<h2 id="p2damagewrapper" hidden="true"><span id="player2b"></span> dealt <span id="p2damage"></span> <span id="p2damagetype"></span></h2>
+		<h2 id="endcard" class="hidden">Game Over! The Winner is <span id="winner"></span>!</h2>
+		<h2 id="loot" class="hidden">You found a <span id="lootQuality"></span> <span id="lootStat"></span> item</h2>
+	</div>
+	<div id="returnbuttons">
+			<button type="button" id="reset" class="hidden" onclick="refresh()">Play Again</button>
+			<button type="button" id="return" class="hidden" onclick="refresh()">Return to World</button>
+			<button type="button" id="makefire" class="hidden" onclick="makeFire()">Make Fire</button>
+			<button type="button" id="closeinventory" class="hidden" onclick="closeInventory()">Close Inventory</button>
+	</div>
+</body>
+<script>
+var statMap = {
+rs: {hp: 20, atk: 4, def: 2, luck: 4, loot:3},
+oc: {hp: 17, atk: 5, def: 3, luck: 3, loot:2},
+ys: {hp: 20, atk: 4, def: 4, luck: 2, loot:1},
+gc: {hp: 17, atk: 3, def: 5, luck: 1, loot:2},
+bls: {hp: 20, atk: 2, def: 4, luck: 2, loot:3},
+pc: {hp: 22, atk: 1, def: 3, luck: 3, loot:4},
+ws: {hp: 20, atk: 2, def: 2, luck: 4, loot:5},
+bkc: {hp: 22, atk: 3, def: 1, luck: 5, loot:4},
+rc: {hp: 17, atk: 3, def: 5, luck: 2, loot:4},
+os: {hp: 17, atk: 4, def: 4, luck: 3, loot:5},
+yc: {hp: 17, atk: 5, def: 3, luck: 4, loot:4},
+gs: {hp: 17, atk: 4, def: 2, luck: 5, loot:3},
+blc: {hp: 20, atk: 3, def: 1, luck: 4, loot:2},
+ps: {hp: 20, atk: 2, def: 2, luck: 3, loot:1},
+wc: {hp: 22, atk: 1, def: 3, luck: 2, loot:2},
+bks: {hp: 22, atk: 2, def: 4, luck: 1, loot:3},
+boss: {hp: 50, atk: 6, def: 6, luck:6, loot: 6}
+};
+
+var lootTable = {
+none: {wood:{stat:"wood", rarity:"none"}, fish:{stat:"fish", rarity:"none"}, food:{stat:"food", rarity:"none"}},
+common: {hp:{stat:"hp", rarity:"common"},atk:{stat:"atk", rarity:"common"},def:{stat:"def", rarity:"common"}},
+rare: {hp:{stat:"hp", rarity:"rare"},atk:{stat:"atk", rarity:"rare"},def:{stat:"def", rarity:"rare"}}
+}
+
+var questList = {
+1:{text:"Hello brave and noble traveler! You have come far to reach me. I have a request for you to deliver to me 3 pieces of wood. If you should succeed in this endeavor I shall reward you greatly.",reqs: {item:'wood', count: 3}, reward: {stat:"hp", rarity:"common"}},
+2:{text:"Greeting my friend! I require 4 fishes. If you are able to deliver me the requested goods then your reward shall be grand.",reqs: {item:'fish', count: 4}, reward: {stat:"def", rarity:"common"}},
+3:{text:"Salutations wanderer! I am famished and am in dire need of some food. If you are able to bring me what I desire then you shall be rewarded well.",reqs: {item: 'food', count: 1}, reward: {stat:"atk", rarity:"rare"}},
+};
+
+const X_WIDTH = 28;
+const Y_HEIGHT = 13;
+var expandedGameMap = [];
+var expandedDoc = [];
+var gameMap = [];
+for (var i = 0; i < X_WIDTH; i++) {
+  gameMap[i] = [];
+}
+for (var i = 0; i < X_WIDTH; i++) {
+  expandedGameMap[i] = [];
+}
+for (var i = 0; i < X_WIDTH; i++) {
+  expandedDoc[i] = [];
+}
+clearGameMap();
+for (var i = 0; i < X_WIDTH; i++) {
+	for(var j = 0; j < Y_HEIGHT; j++) {
+        expandedGameMap[i][j] = [];
+    }
+}
+for (var i = 0; i < X_WIDTH; i++) {
+	for(var j = 0; j < Y_HEIGHT; j++) {
+        expandedDoc[i][j] = [];
+    }
+}
+expandedGameMap[0][0] = gameMap;
+var openableTiles = ["chest", "wood", "water"];
+var nonEnemies = ["questmaster", "fire"];
+var colorArray = ["red","orange","yellow","green","blue","purple","white","black","red","orange","yellow","green","blue","purple","white","black"];
+var keyArray = ["rs","oc","ys","gc","bls","pc","ws","bkc","rc","os","yc","gs","blc","ps","wc","bks"];
+var isPlayerOneTurn = true;
+var playerOne = {element: null, shape: null, stats: {}, originalStats: {}, score: 0, items: []};
+var playerTwo = {shape: null, stats: {}, originalStats: {}, score: 0, items: []};
+var gameOver = true;
+var canClick = true;
+var shape = null;
+var stats = {};
+var turnCompleted = false;
+var mode = null;
+var damage = 0;
+var isLucky = false;
+var count = 0;
+var p1Score = 0;
+var p2Score = 0;
+var game = document.getElementById("game");
+var x = 0;
+var y = 0;
+var expandedx = 0;
+var expandedy = 0;
+var objCount = 1;
+var charLength = 52;
+var totalCharacters = keyArray.length;
+var margin = 8;
+var objectsToCreate = 4;
+var questNum = 1;
+var isQuestCompleted = false;
+var isQuestStarted = false;
+document.getElementById("prompt").innerHTML = "Player 1 Select a Shape";
+var savedGame = localStorage.getItem("savedGame");
+if(savedGame !== null){
+	document.getElementById("load").classList.remove("hidden");
+	document.getElementById("load").classList.add("visible");
+}
+
+function clearGameMap(){
+	for(var i = 0; i < gameMap.length; i++) {
+		for(var j = 0; j < Y_HEIGHT; j++) {
+			gameMap[i][j] = null;
+		}
+	}
+}
+
+function clearWorld(){
+	var element = document.querySelectorAll("[canDelete='myObject']");
+	for(var i = 0; i < element.length; i++){
+		document.getElementById("singlegame").removeChild(element[i]);
+	}
+}
+
+function show(e){
+	document.getElementById("selectedColor").hidden = false;
+	document.getElementById("selectedColor").innerHTML = e.getAttribute("color") + " " + e.getAttribute("shape");
+	playerOne.element = e;
+	shape = e.getAttribute("color") + " " + e.getAttribute("shape");
+	stats = statMap[e.getAttribute("key")];
+	console.log(stats);
+	document.getElementById("confirm").setAttribute("class", "visible");
+}
+
+function select(){
+	if(mode === 'single'){
+		singlePlayer();
+	}else if(mode === 'multi'){
+		multiPlayer();
+	}
+}
+
+function generateGameWorld(){
+	playerOne.shape = shape;
+	playerOne.stats = stats;
+	document.getElementById("confirm").setAttribute("class", "hidden");
+	document.getElementById("singlegame").hidden = false;
+	playerOne.element.classList.add("movable");
+	playerOne.element.style.top = margin;
+	playerOne.element.style.left = margin;
+	document.getElementById("character").appendChild(playerOne.element);
+	gameMap[x][y] = playerOne.element;
+	document.getElementById("choices").setAttribute("class", "hidden");
+	document.getElementById("prompt").setAttribute("class", "hidden");
+}
+
+function createObjects(){
+	for(var idx = 0; idx < objectsToCreate; idx++){
+		var num = getRandomInt(0, 100);
+		if(num >= 0 && num < 25){
+			addObjectToMap('wood');
+		}else if(num >= 25 && num < 50){
+			addObjectToMap('water');
+		}else if(num >= 50 && num < 60){
+			addObjectToMap(true);
+		}else{
+			addObjectToMap();
+		}
+	}
+}
+
+function singlePlayer(){
+	generateGameWorld();
+	createObjects();
+	addObjectToMap('questmaster');
+	saveGame();
+}
+
+function multiPlayer(){
+	if(isPlayerOneTurn){
+		playerOne.shape = shape;
+		playerOne.stats = stats;
+		document.getElementById("selectedColor").hidden = true;
+		document.getElementById("prompt").innerHTML = "Player 2 Select a Shape";
+	}else{
+		playerTwo.shape = shape;
+		playerTwo.stats = stats;
+		start();
+	}
+	isPlayerOneTurn = !isPlayerOneTurn;
+	document.getElementById("confirm").setAttribute("class", "hidden");
+}
+
+function chooseMode(element){
+	mode = element.getAttribute('id');
+	if(mode === 'load'){
+		//load stuff from storage
+		document.getElementById("singlegame").innerHTML = localStorage.getItem('singlegame');
+		playerOne = JSON.parse(localStorage.getItem("playerOne"));
+		gameMap = JSON.parse(localStorage.getItem("gameMap"));
+		expandedGameMap = JSON.parse(localStorage.getItem("expandedGameMap"));
+		expandedDoc = JSON.parse(localStorage.getItem("expandedDoc"));
+		x = parseInt(localStorage.getItem('xcoord'));
+		y = parseInt(localStorage.getItem('ycoord'));
+		expandedx = parseInt(localStorage.getItem('expandedxcoord'));
+		expandedy = parseInt(localStorage.getItem('expandedycoord'));
+		objCount = parseInt(localStorage.getItem('objCount'));
+		document.getElementById("singlegame").hidden = false;
+		document.getElementById("singlegame").innerHTML = expandedDoc[expandedx][expandedy];
+		mode = 'single';
+	}else if(mode === 'single' || mode === 'multi'){
+		document.getElementById("choices").setAttribute("class", "visible");
+		document.getElementById("prompt").setAttribute("class", "visible");
+	}
+	document.getElementById("modeselect").setAttribute("class", "hidden");
+}
+
+function start(){
+	playerOne.originalStats = JSON.parse(JSON.stringify( playerOne.stats));
+	playerTwo.originalStats = JSON.parse(JSON.stringify( playerTwo.stats));
+	document.getElementById("prompt").setAttribute("class", "hidden");
+	gameOver = false;
+	canClick = false;
+	document.getElementById("round").innerHTML = parseInt(count) + 1;
+	
+	document.getElementById("turn").innerHTML = playerOne.shape;
+	
+	document.getElementById("p1damagewrapper").hidden = true;
+
+	document.getElementById("p1resultwrapper").hidden = true;
+
+	document.getElementById("p2damagewrapper").hidden = true;
+
+	document.getElementById("p2resultwrapper").hidden = true;
+	
+	document.getElementById("choices").setAttribute("class", "hidden");
+	
+	game.hidden = false;
+	document.getElementById("p1Name").innerHTML = playerOne.shape;
+	
+	document.getElementById("p2Name").innerHTML = playerTwo.shape;
+	
+	for(var i = 0; i < playerOne.items.length; i++){
+		equipItem(playerOne, playerOne.items[i]);
+	}
+	for(var i = 0; i < playerTwo.items.length; i++){
+		equipItem(playerTwo, playerTwo.items[i]);
+	}
+
+	updateHP();
+}
+
+function equipItem(player, item){
+	if(item.rarity === 'common'){
+		player.stats[item.stat] = player.stats[item.stat] + 1;
+	}else if(item.rarity === 'rare'){
+		player.stats[item.stat] = player.stats[item.stat] + 2;
+	}
+}
+
+function getQuest(){
+	document.getElementById("prompt").setAttribute("class", "visible");
+	updateQuestStatus();
+	if(isQuestCompleted && isQuestStarted){
+		completeQuest();
+	}else{
+		document.getElementById("prompt").innerHTML = questList[questNum].text;
+		isQuestStarted = true;
+	}
+	document.getElementById("return").setAttribute("class", "visible");
+}
+
+function updateQuestStatus(){
+	var itemCount = playerOne.items.filter(isType(questList[questNum].reqs.item)).length;
+	isQuestCompleted = itemCount >= questList[questNum].reqs.count;
+}
+
+function completeQuest(){
+	isQuestCompleted = false;
+	isQuestStarted = false;
+	var removedNum = false;
+	var removedCount = 0;
+	for (var i = playerOne.items.length - 1; i >= 0; --i) {
+		if (playerOne.items[i].stat === questList[questNum].reqs.item && !removedNum) {
+			playerOne.items.splice(i,1);
+			removedCount++;
+			if(removedCount === questList[questNum].reqs.count){
+				removedNum = true;
+			}
+		}
+	}
+	playerOne.items.push(questList[questNum].reward);
+	document.getElementById("prompt").innerHTML = "Congratuations you have completed the quest! You have received a " + questList[questNum].reward.rarity + " " + questList[questNum].reward.stat + " item";
+	questNum++;
+	if(questNum > 3){
+		questNum = 1;
+	}
+}
+
+function chopWood(){
+	playerOne.items.push(lootTable["none"]["wood"]);
+	document.getElementById("prompt").setAttribute("class", "visible");
+	document.getElementById("prompt").innerHTML = "You got some wood";
+	document.getElementById("return").setAttribute("class", "visible");
+}
+
+function getFish(){
+	playerOne.items.push(lootTable["none"]["fish"]);
+	document.getElementById("prompt").setAttribute("class", "visible");
+	document.getElementById("prompt").innerHTML = "You got a fish";
+	document.getElementById("return").setAttribute("class", "visible");
+}
+
+function makeFire(){
+	var removedOne = false;
+	for (var i = playerOne.items.length - 1; i >= 0; --i) {
+		if (playerOne.items[i].stat === "wood" && !removedOne) {
+			playerOne.items.splice(i,1);
+			removedOne = true;
+		}
+	}
+	addObjectToMap('fire');
+	document.getElementById("wood").innerHTML = playerOne.items.filter(isType('wood')).length;
+	if(playerOne.items.filter(isType('wood')).length < 1){
+		document.getElementById("makefire").classList.remove("visible");
+		document.getElementById("makefire").classList.add("hidden");
+	}
+}
+
+function removeFire(){
+	var element = document.querySelectorAll("[color='fire']");
+	document.getElementById("singlegame").removeChild(element[0]);
+	gameMap[(parseInt(element[0].style.left) - margin) / (charLength + 1)][(parseInt(element[0].style.top) - margin) / (charLength + 1)] = null;
+}
+
+function cookFood(){
+	if(playerOne.items.filter(isType('fish')).length > 0){
+		var removedOne = false;
+		for (var i = playerOne.items.length - 1; i >= 0; --i) {
+			if (playerOne.items[i].stat === "fish" && !removedOne) {
+				playerOne.items.splice(i,1);
+				removedOne = true;
+			}
+		}
+		playerOne.items.push(lootTable["none"]["food"]);
+		document.getElementById("prompt").setAttribute("class", "visible");
+		document.getElementById("prompt").innerHTML = "You cooked some food";
+	}else{
+		document.getElementById("prompt").setAttribute("class", "visible");
+		document.getElementById("prompt").innerHTML = "You have nothing to cook";
+	}
+	document.getElementById("return").setAttribute("class", "visible");
+}
+
+function openChest(ai){
+	if(mode === 'single'){
+		if(ai.color === 'wood'){
+			chopWood();
+		}else if(ai.color === 'water'){
+			getFish();
+		}else{
+			playerOne.originalStats = JSON.parse(JSON.stringify( playerOne.stats));
+			var loot = getLoot(playerOne);
+			if(loot !== 'none'){
+				var lootType = getLootType();
+				playerOne.items.push(lootTable[loot][lootType]);
+				document.getElementById("lootprompt").classList.remove("hidden");
+				document.getElementById("lootprompt").classList.add("visible");
+				document.getElementById("lootpromptQuality").innerHTML = loot;
+				document.getElementById("lootpromptStat").innerHTML = lootType;
+				document.getElementById("return").setAttribute("class", "visible");
+			}else{
+				document.getElementById("prompt").setAttribute("class", "visible");
+				document.getElementById("prompt").innerHTML = "You did not find anything";
+				document.getElementById("return").setAttribute("class", "visible");
+			}
+		}
+	}
+}
+
+function updateHP(){
+	document.getElementById("p1Score").innerHTML = playerOne.score + " - HP: " + playerOne.stats.hp + "/" + playerOne.originalStats.hp;
+	document.getElementById("p2Score").innerHTML = playerTwo.score + " - HP: " + playerTwo.stats.hp + "/" + playerTwo.originalStats.hp;
+}
+
+function attack(player, enemy, val, isLucky){
+	if(isLucky){
+		val = val + 2;
+	}
+	damage = (player.stats.atk + val) - (enemy.stats.def * 2);
+	if(damage > 0){
+		enemy.stats.hp = enemy.stats.hp - damage;
+		player.score = parseInt(player.score) + parseInt(damage);
+	}
+}
+
+function heal(player, val, isLucky){
+	if(isLucky){
+		val = val - 2;
+	}
+	damage = (player.stats.atk + 6) - (val / 2);
+	if(damage > 0){
+		player.stats.hp = player.stats.hp + damage;
+		if(player.stats.hp > player.originalStats.hp){
+			player.stats.hp = JSON.parse(JSON.stringify( player.originalStats.hp));
+		}
+		player.score = parseInt(player.score) + parseInt(damage);
+	}
+}
+
+function handleRoll(player, enemy, val, type, elementId){
+	var prob = getRandomInt(0, 100);
+	if((player.stats.luck * 3) > prob){
+		isLucky = true;
+	}
+	if(type === 'attack'){
+		attack(player, enemy, val, isLucky);
+		document.getElementById(elementId).innerHTML = 'damage';
+	}else if(type === 'heal'){
+		heal(player, val, isLucky);
+		document.getElementById(elementId).innerHTML = 'healing';
+	}
+}
+
+function roll(element){
+	if(!gameOver){
+		var type = element.getAttribute('id');
+		var val = getRandomInt(2, 13);
+		var damageId = "";
+		var resultId = "";
+		isLucky = false;
+		if(isPlayerOneTurn){
+			document.getElementById("player1a").innerHTML = playerOne.shape	
+			document.getElementById("player1b").innerHTML = playerOne.shape
+			handleRoll(playerOne, playerTwo, val, type, "p1damagetype");
+			damageId = "p1damage";
+			resultId = "p1result";
+			document.getElementById("p1damagewrapper").hidden = false;
+			document.getElementById("p1resultwrapper").hidden = false;
+		}else{
+			document.getElementById("player2a").innerHTML = playerTwo.shape
+			document.getElementById("player2b").innerHTML = playerTwo.shape
+			handleRoll(playerTwo, playerOne, val, type, "p2damagetype");
+			damageId = "p2damage";
+			resultId = "p2result";
+			document.getElementById("p2damagewrapper").hidden = false;
+			document.getElementById("p2resultwrapper").hidden = false;
+			turnCompleted = true;
+		}
+		document.getElementById(resultId).innerHTML = val;
+		if(damage < 0){
+			damage = 0;
+		}
+		var extra = isLucky ? " LUCKY!" : "";
+		document.getElementById(damageId).innerHTML = damage + extra;
+		updateHP();
+		isPlayerOneTurn = !isPlayerOneTurn;
+		checkCount();
+		document.getElementById("round").innerHTML = parseInt(count) + 1;
+		document.getElementById("turn").innerHTML = isPlayerOneTurn ? playerOne.shape : playerTwo.shape;
+		if(mode === 'single' && !isPlayerOneTurn){
+			aiDecision();
+		}
+	}
+}
+
+function aiDecision(){
+	if(playerTwo.stats.hp > ((playerTwo.originalStats.hp * 2) / 3)){
+		document.getElementById("attack").click();
+	}else{
+		document.getElementById("heal").click();
+	}
+}
+
+function checkCount(){
+	if(playerOne.stats.hp > 0 && playerTwo.stats.hp > 0){
+		if(turnCompleted){
+			turnCompleted = false;
+			count++;
+		}
+	}else{
+		turnCompleted = false;
+		endGame();
+	}
+}
+
+function endGame(){
+	canClick = false;
+	document.getElementById("results").hidden = true;
+	var endResults = document.getElementById("results").cloneNode(true);
+	endResults.innerHTML = "Results";
+	var winner = null;
+	var winnerStats = {};
+	if(playerTwo.stats.hp <= 0){
+		document.getElementById("winner").innerHTML = playerOne.shape;
+		winner = JSON.parse(JSON.stringify( playerOne));
+	}else if(playerOne.stats.hp <= 0){
+		document.getElementById("winner").innerHTML = playerTwo.shape;
+	}
+	restoreStats(playerOne.stats, playerOne.originalStats);
+	restoreStats(playerTwo.stats, playerTwo.originalStats);
+	if(mode === 'single'){
+		document.getElementById("endcard").setAttribute("class", "visible");
+		document.getElementById("return").setAttribute("class", "visible");
+		if(winner !== null){
+			var loot = getLoot(winner);
+			if(loot !== 'none'){
+				var lootType = getLootType();
+				playerOne.items.push(lootTable[loot][lootType]);
+				document.getElementById("loot").classList.remove("hidden");
+				document.getElementById("loot").classList.add("visible");
+				document.getElementById("lootQuality").innerHTML = loot;
+				document.getElementById("lootStat").innerHTML = lootType;
+			}
+		}
+	}else if(mode === 'multi'){
+		document.getElementById("reset").setAttribute("class", "visible");
+	}
+	gameOver = true;
+}
+
+function getLootType(){
+	var lootType = getRandomInt(0, 3);
+	switch(lootType){
+	case 0:
+		lootType = "hp";
+		break;
+	case 1:
+		lootType = "atk";
+		break;
+	case 2:
+		lootType = "def";
+		break;
+	}
+	return lootType;
+}
+
+function getLoot(winner){
+	var prob = getRandomInt(0, 100);
+	var loot = 'none';
+	if(winner.originalStats.loot === prob){
+		loot = 'rare';
+	}else if((winner.originalStats.loot * 2) > prob){
+		loot = 'common';
+	}
+	return loot;
+}
+
+function restoreStats(stats, original){
+	stats.hp = JSON.parse(JSON.stringify( original.hp));
+	stats.atk = JSON.parse(JSON.stringify( original.atk));
+	stats.def = JSON.parse(JSON.stringify( original.def));
+}
+
+function showMap(){
+	document.getElementById("singlegame").classList.remove("hidden");
+	document.getElementById("singlegame").classList.add("visible");
+	canClick = true;
+}
+
+function hideMap(){
+	canClick = false;
+	document.getElementById("singlegame").classList.remove("visible");
+	document.getElementById("singlegame").classList.add("hidden");
+}
+
+function refresh(){
+	if(mode === 'single'){
+		document.getElementById("return").setAttribute("class", "hidden");
+		document.getElementById("endcard").setAttribute("class", "hidden");
+		showMap();
+		document.getElementById("loot").classList.remove("visible");
+		document.getElementById("loot").classList.add("hidden");
+		document.getElementById("prompt").setAttribute("class", "hidden");
+		game.hidden = true;
+		removeObjectFromMap();
+		expandedDoc[expandedx][expandedy] = JSON.parse(JSON.stringify(document.getElementById("singlegame").innerHTML));
+		saveGame();
+	}else if(mode === 'multi'){
+		window.location.reload();
+	}
+}
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+}
+
+function leftArrowPressed(){
+	var element = document.getElementById("character").children[0];
+	if((parseInt(element.style.left) - (charLength + 1)) > margin){
+		element.style.left = parseInt(element.style.left) - (charLength + 1) + 'px';
+	}else{
+		element.style.left = margin + 'px';
+	}
+	x = (parseInt(element.style.left) - margin) / (charLength + 1);
+}
+
+function rightArrowPressed(){
+	var element = document.getElementById("character").children[0]
+	if((parseInt(element.style.left) + (charLength + 1)) < ((charLength * X_WIDTH) + margin)){
+		element.style.left = parseInt(element.style.left) + (charLength + 1) + 'px';
+	}else{
+		element.style.left = ((charLength * X_WIDTH) + margin)+ 'px';
+	};
+	x = (parseInt(element.style.left) - margin) / (charLength + 1);
+}
+
+function upArrowPressed(){
+	var element = document.getElementById("character").children[0];
+	if((parseInt(element.style.top) - (charLength + 1)) > margin){
+		element.style.top = parseInt(element.style.top) - (charLength + 1) + 'px';
+	}else{
+		element.style.top = margin + 'px';
+	}
+	y = (parseInt(element.style.top) - margin) / (charLength + 1);
+}
+
+function downArrowPressed(){
+	var element = document.getElementById("character").children[0];
+	if((parseInt(element.style.top) + (charLength + 1)) < ((charLength * Y_HEIGHT) + margin)){
+		element.style.top = parseInt(element.style.top) + (charLength + 1) + 'px';
+	}else{
+		element.style.top = ((charLength * Y_HEIGHT) + margin)+ 'px';
+	}
+	y = (parseInt(element.style.top) - margin) / (charLength + 1);
+}
+
+function moveSelection(event){
+	if(canClick){
+	document.getElementById("loot").classList.remove("visible");
+	document.getElementById("loot").classList.add("hidden");
+	document.getElementById("lootprompt").classList.remove("visible");
+	document.getElementById("lootprompt").classList.add("hidden");
+	switch(event.keyCode){
+		case 37:
+			if(x !== 0 && gameMap[x-1][y] == null){
+				leftArrowPressed();
+				gameMap[x+1][y] = null;
+				gameMap[x][y] = playerOne;
+				console.log("COORDS X,Y", x, y, gameMap);
+			}else if(expandedx !== 0 && (gameMap[x-1][y] == null || x === 0)){
+				gameMap[x+1][y] = null;
+				expandedDoc[expandedx][expandedy] = JSON.parse(JSON.stringify(document.getElementById("singlegame").innerHTML));
+				expandedGameMap[expandedx][expandedy] = JSON.parse(JSON.stringify(gameMap));
+				x = (X_WIDTH - 1);
+				var element = document.getElementById("character").children[0];
+				element.style.left = (parseInt(x) * (charLength + 1)) + margin;
+				expandedx--;
+				clearGameMap();
+				gameMap[x][y] = playerOne;
+				clearWorld();
+				if(expandedGameMap[expandedx][expandedy].length > 0){
+					gameMap = JSON.parse(JSON.stringify(expandedGameMap[expandedx][expandedy]));
+					document.getElementById("singlegame").innerHTML = JSON.parse(JSON.stringify(expandedDoc[expandedx][expandedy]));
+				}
+				if(document.querySelectorAll("[canDelete='myObject']").length === 0){
+					createObjects();
+				}
+			}
+			break;
+		case 39:
+			if(x !== (X_WIDTH - 1) && gameMap[x+1][y] == null){
+				rightArrowPressed();
+				gameMap[x-1][y] = null;
+				gameMap[x][y] = playerOne;
+				console.log("COORDS X,Y", x, y, gameMap);
+			}else if(expandedx !== (X_WIDTH - 1) && (gameMap[x+1][y] == null || x === (X_WIDTH - 1))){
+				gameMap[x-1][y] = null;
+				expandedDoc[expandedx][expandedy] = JSON.parse(JSON.stringify(document.getElementById("singlegame").innerHTML));
+				expandedGameMap[expandedx][expandedy] = JSON.parse(JSON.stringify(gameMap));
+				x = 0;
+				var element = document.getElementById("character").children[0];
+				element.style.left = (parseInt(x) * (charLength + 1)) + margin;
+				expandedx++;
+				clearGameMap();
+				gameMap[x][y] = playerOne;
+				clearWorld();
+				if(expandedGameMap[expandedx][expandedy].length > 0){
+					gameMap = JSON.parse(JSON.stringify(expandedGameMap[expandedx][expandedy]));
+					document.getElementById("singlegame").innerHTML = JSON.parse(JSON.stringify(expandedDoc[expandedx][expandedy]));
+				}
+				if(document.querySelectorAll("[canDelete='myObject']").length === 0){
+					createObjects();
+				}
+			}
+			break;
+		case 38:
+			if(y !== 0 && gameMap[x][y-1] == null){
+				upArrowPressed();
+				gameMap[x][y+1] = null;
+				gameMap[x][y] = playerOne;
+				console.log("COORDS X,Y", x, y, gameMap);
+			}else if(expandedy !== 0 && (gameMap[x][y-1] == null || y === 0)){
+				gameMap[x][y+1] = null;
+				expandedDoc[expandedx][expandedy] = JSON.parse(JSON.stringify(document.getElementById("singlegame").innerHTML));
+				expandedGameMap[expandedx][expandedy] = JSON.parse(JSON.stringify(gameMap));
+				y = (Y_HEIGHT - 1);
+				gameMap[x][y] = playerOne;
+				var element = document.getElementById("character").children[0];
+				element.style.top = (parseInt(y) * (charLength + 1)) + margin;
+				expandedy--;
+				clearGameMap();
+				gameMap[x][y] = playerOne;
+				clearWorld();
+				if(expandedGameMap[expandedx][expandedy].length > 0){
+					gameMap = JSON.parse(JSON.stringify(expandedGameMap[expandedx][expandedy]));
+					document.getElementById("singlegame").innerHTML = JSON.parse(JSON.stringify(expandedDoc[expandedx][expandedy]));
+				}
+				if(document.querySelectorAll("[canDelete='myObject']").length === 0){
+					createObjects();
+				}
+			}
+			break;
+		case 40:
+			if(y !== (Y_HEIGHT - 1) && gameMap[x][y+1] == null){
+				downArrowPressed();
+				gameMap[x][y-1] = null;
+				gameMap[x][y] = playerOne;
+				console.log("COORDS X,Y", x, y, gameMap);
+			}else if(expandedy !== (Y_HEIGHT - 1) && (gameMap[x][y+1] == null) || y === (Y_HEIGHT - 1)){
+				gameMap[x][y-1] = null;
+				expandedDoc[expandedx][expandedy] = JSON.parse(JSON.stringify(document.getElementById("singlegame").innerHTML));
+				expandedGameMap[expandedx][expandedy] = JSON.parse(JSON.stringify(gameMap));
+				y = 0;
+				gameMap[x][y] = playerOne;
+				var element = document.getElementById("character").children[0];
+				element.style.top = (parseInt(y) * (charLength + 1)) + margin;
+				expandedy++;
+				clearGameMap();
+				gameMap[x][y] = playerOne;
+				clearWorld();
+				if(expandedGameMap[expandedx][expandedy].length > 0){
+					gameMap = JSON.parse(JSON.stringify(expandedGameMap[expandedx][expandedy]));
+					document.getElementById("singlegame").innerHTML = JSON.parse(JSON.stringify(expandedDoc[expandedx][expandedy]));
+				}
+				if(document.querySelectorAll("[canDelete='myObject']").length === 0){
+					createObjects();
+				}
+			}
+			break;
+		case 32:
+			if((x !== 0 && gameMap[x-1][y] !== null) || (y !== 0 && gameMap[x][y-1] !== null) || gameMap[x][y+1] !== null || gameMap[x+1][y] !== null){
+				startSingleBattle();
+			}
+			break;
+		case 73:
+			openInventory();
+			break;
+			
+	}
+	if(mode === 'single'){
+		expandedDoc[expandedx][expandedy] = JSON.parse(JSON.stringify(document.getElementById("singlegame").innerHTML));
+		saveGame();
+	}
+	}
+};
+
+function isType(type){
+	return function matchesType(item){
+		return item.stat === type;
+	}
+}
+
+function openInventory(){
+	hideMap();
+	document.getElementById("inventory").classList.remove("hidden");
+	document.getElementById("inventory").classList.add("visible");
+	document.getElementById("closeinventory").setAttribute("class", "visible");
+	document.getElementById("atkitems").innerHTML = playerOne.items.filter(isType('atk')).length;
+	document.getElementById("defitems").innerHTML = playerOne.items.filter(isType('def')).length;
+	document.getElementById("hpitems").innerHTML = playerOne.items.filter(isType('hp')).length;
+	document.getElementById("wood").innerHTML = playerOne.items.filter(isType('wood')).length;
+	document.getElementById("fish").innerHTML = playerOne.items.filter(isType('fish')).length;
+	document.getElementById("food").innerHTML = playerOne.items.filter(isType('food')).length;
+	if(playerOne.items.filter(isType('wood')).length > 0){
+		document.getElementById("makefire").classList.remove("hidden");
+		document.getElementById("makefire").classList.add("visible");
+	}
+}
+
+function closeInventory(){
+	document.getElementById("inventory").classList.remove("visible");
+	document.getElementById("inventory").classList.add("hidden");
+	document.getElementById("closeinventory").setAttribute("class", "hidden");
+	document.getElementById("makefire").classList.remove("visible");
+	document.getElementById("makefire").classList.add("hidden");
+	showMap();
+}
+
+function findAi(){
+	if((x !== 0 && gameMap[x-1][y] !== null)){
+		return gameMap[x-1][y];
+	}else if(x !== X_WIDTH-1 && gameMap[x+1][y] !== null){
+		return gameMap[x+1][y];
+	}else if(y !== Y_HEIGHT-1 && gameMap[x][y+1] !== null){
+		return gameMap[x][y+1];
+	}else{
+		return gameMap[x][y-1];
+	}
+}
+
+function startSingleBattle(){
+	hideMap();
+	var ai = findAi();
+	if(openableTiles.indexOf(ai.color) !== -1){
+		openChest(ai);
+	}else if(ai.color === 'questmaster'){
+		getQuest();
+	}else if(ai.color === 'fire'){
+		cookFood();
+	}else{
+		playerTwo.shape = ai.color + " " + ai.shape;
+		playerTwo.stats = JSON.parse(JSON.stringify(statMap[ai.key]));
+		playerOne.originalStats = JSON.parse(JSON.stringify( playerOne.stats));
+		playerTwo.originalStats = JSON.parse(JSON.stringify( playerTwo.stats));
+		var loot = getLoot(playerTwo);
+		if(loot !== 'none'){
+			playerTwo.items.push(lootTable[loot][getLootType()]);
+		}else{
+			playerTwo.items = [];
+		}
+		document.getElementById("results").hidden = false;
+		isPlayerOneTurn = true;
+		game.hidden = false;
+		count = 0;
+		start();
+	}
+}
+
+function removeObjectFromMap(){
+	var ai = findAi();
+	if(nonEnemies.indexOf(ai.color) === -1){
+		var xcoord = 0;
+		var ycoord = 0;
+		if((x !== 0 && gameMap[x-1][y] !== null)){
+			gameMap[x-1][y] = null;
+			xcoord = x-1;
+			ycoord = y;
+		}else if(x !== X_WIDTH-1 && gameMap[x+1][y] !== null){
+			gameMap[x+1][y] = null;
+			xcoord = x+1;
+			ycoord = y;
+		}else if(y !== Y_HEIGHT-1 && gameMap[x][y+1] !== null){
+			gameMap[x][y+1] = null;
+			xcoord = x;
+			ycoord = y+1;
+		}else{
+			gameMap[x][y-1] = null;
+			xcoord = x;
+			ycoord = y-1;
+		}
+		var element = document.querySelectorAll("[coords=" + "'" + xcoord+', '+ycoord + "'" + "]");
+		document.getElementById("singlegame").removeChild(element[0]);
+		objCount--;
+		if(objCount === 1){
+			createObjects();
+			if(playerOne.score > 5000){
+				addObjectToMap('boss');
+			}
+		}
+	}
+}
+
+function addEnemy(object, mapObject, shapeKey){
+	if(shapeKey === 100){
+		object.setAttribute('color', 'boss');
+		object.setAttribute('key', 'boss');
+		object.classList.add('boss');
+			
+		mapObject.classes.push('boss');
+		mapObject.color = 'boss';
+		mapObject.key = 'boss';
+	}else{
+		object.setAttribute('color', colorArray[shapeKey].charAt(0).toUpperCase() + colorArray[shapeKey].slice(1));
+		object.setAttribute('key', keyArray[shapeKey]);
+		object.classList.add(colorArray[shapeKey]);
+			
+		mapObject.classes.push(colorArray[shapeKey]);
+		mapObject.color = colorArray[shapeKey].charAt(0).toUpperCase() + colorArray[shapeKey].slice(1);
+		mapObject.key = keyArray[shapeKey];
+	}
+}
+
+function addObject(object, mapObject, item){
+	if(item === 'questmaster'){
+		object.setAttribute('color', 'questmaster');
+		object.classList.add('questmaster');
+			
+		mapObject.classes.push('questmaster');
+		mapObject.color = 'questmaster';
+	}else if(item === 'fire'){
+		object.setAttribute('color', 'fire');
+		object.classList.add('fire');
+			
+		mapObject.classes.push('fire');
+		mapObject.color = 'fire';
+		//remove after 60 seconds
+		setTimeout(function(){
+		  removeFire();
+		}, 60000);
+	}else if(item === 'wood'){
+		object.setAttribute('color', 'wood');
+		object.classList.add('wood');
+			
+		mapObject.classes.push('wood');
+		mapObject.color = 'wood';
+	}else if(item === 'water'){
+		object.setAttribute('color', 'water');
+		object.classList.add('water');
+			
+		mapObject.classes.push('water');
+		mapObject.color = 'water';
+	}else{
+		object.setAttribute('color', 'chest');
+		object.classList.add('chest');
+			
+		mapObject.classes.push('chest');
+		mapObject.color = 'chest';
+	}
+}
+
+function addObjectToMap(onlyNonEnemy){
+	var xcoord = x;
+	var ycoord = y;
+	while(gameMap[xcoord][ycoord] !== null){
+		xcoord = getRandomInt(0, X_WIDTH);
+		ycoord = getRandomInt(0, Y_HEIGHT);
+	}
+	var object = document.getElementById("sample").cloneNode(true);
+	var mapObject = {classes: []};
+	object.hidden = false;
+	object.id = objCount;
+	if(nonEnemies.indexOf(onlyNonEnemy) === -1){
+		objCount++;
+	}
+	object.classList.remove("green");
+	object.classList.remove("square");
+	object.setAttribute("canDelete", "myObject");
+	var shapeKey = getRandomInt(-1, totalCharacters);
+	if(onlyNonEnemy && onlyNonEnemy !== 'boss'){
+		shapeKey = -1;
+	}else if(onlyNonEnemy === 'boss'){
+		shapeKey = 100;
+	}
+	if(getRandomInt(0, 2) === 1){
+		object.classList.add("square");
+		object.setAttribute('shape', 'square');	
+		
+		mapObject.classes.push('square');
+		mapObject.shape = 'square';
+		if(onlyNonEnemy === 'water' || onlyNonEnemy === 'wood'){
+			onlyNonEnemy = 'water';
+		}
+	}else{
+		object.classList.add("circle");
+		object.setAttribute('shape', 'circle');	
+		
+		mapObject.classes.push('circle');
+		mapObject.shape = 'circle';
+		if(onlyNonEnemy === 'water' || onlyNonEnemy === 'wood'){
+			onlyNonEnemy = 'wood';
+		}
+	}
+	if(shapeKey === -1){
+		addObject(object, mapObject, onlyNonEnemy);
+	}else{
+		addEnemy(object, mapObject, shapeKey);
+	}
+	object.setAttribute('coords',xcoord+', '+ycoord);
+	var leftdist = (parseInt(xcoord) * (charLength + 1)) + margin;
+	var topdist = (parseInt(ycoord) * (charLength + 1)) + margin;
+	object.style.top = topdist;
+	object.style.left = leftdist;
+	gameMap[xcoord][ycoord] = mapObject;
+	document.getElementById("singlegame").appendChild(object);
+}
+
+function saveGame(){
+	localStorage.setItem('savedGame', true);
+	localStorage.setItem('singlegame', document.getElementById("singlegame").innerHTML);
+	localStorage.setItem("playerOne", JSON.stringify(playerOne));
+	localStorage.setItem('xcoord', x);
+	localStorage.setItem('ycoord', y);
+	localStorage.setItem('expandedxcoord', expandedx);
+	localStorage.setItem('expandedycoord', expandedy);
+	localStorage.setItem("gameMap", JSON.stringify(gameMap));
+	localStorage.setItem("expandedGameMap", JSON.stringify(expandedGameMap));
+	localStorage.setItem("expandedDoc", JSON.stringify(expandedDoc));
+	localStorage.setItem('objCount', objCount);
+}
+//13 x 28 grid
+function gameLoop(){
+	moveSelection();
+	setTimeout("gameLoop()", 10);
+}
+</script>
+</html>
